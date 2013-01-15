@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="axion.properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:axion.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="axion.context" class="axion.DefaultContextImpl">
+		<property name="path">
+			<value>/websocket/{uid}</value>
+		</property>
+		<property name="channels">
+			<list>
+				<ref bean="chat" />
+				<ref bean="cmd" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- WSChannel List -->
+	<bean id="chat" class="axion.channel.DefaultWSPubSubChannel">
+		<property name="path">
+			<value>/chat</value>
+		</property>
+		<property name="responder">
+			<value>axion.responder.string.StringResponder</value>
+		</property>
+	</bean>
+	<bean id="cmd" class="axion.sample.command.CommandWSChannel">
+		<property name="responder">
+			<value>axion.sample.command.CommandResponder</value>
+		</property>
+	</bean>
+</beans>

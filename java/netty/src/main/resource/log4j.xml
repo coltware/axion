@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="SYSOUT" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+         value="%5p [%d] %C{2} (%F:%L) - %m%n" />
+    </layout>
+  </appender>
+  
+  <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+    <param name="File"   value="access.log" />
+    <param name="MaxFileSize" value="1MB" />
+    <param name="MaxBackupIndex" value="10" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+        value="%5p [%d] %C{2} (%F:%L) - %m%n"  />
+    </layout>
+  </appender>
+  
+  <appender name="SYSLOG" class="org.apache.log4j.net.SyslogAppender">
+  	<param name="SyslogHost" value="localhost:10514" />
+    <param name="Facility" value="local0" />
+    <param name="FacilityPrinting" value="true" />    
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+        value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+    </layout>
+  </appender>
+  
+  <category name="com.coltware">
+  	<priority value="debug" />
+  	<appender-ref ref="SYSOUT" />
+  </category>
+  <category name="axion">
+  	<priority value="debug" />
+  	<appender-ref ref="SYSOUT" />
+  </category>
+  <root>
+    <priority value="warn" />
+    <appender-ref ref="FILE" />
+  </root>
+  
+</log4j:configuration>
