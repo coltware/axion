@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import axion.Connection;
 import axion.ConnectionState;
+import axion.data.DefaultEventMessage;
 import axion.data.EventMessage;
 
 public class DefaultWSPubSubChannel extends AbstractWSChannel implements
@@ -91,11 +92,29 @@ public class DefaultWSPubSubChannel extends AbstractWSChannel implements
 		log.debug(this.getPath() + " - connection closed.." + size());
 		
 		for(String name: targets){
-			if(this.bindMap.containsKey(name) && this.bindMap.get(name).size() == 0){
-				log.debug("clear bind list : " + name);
-				this.bindMap.remove(name);
+			if(this.bindMap.containsKey(name)){
+				if(this.bindMap.get(name).size() == 0){
+					log.debug("clear bind list : " + name);
+					this.bindMap.remove(name);
+				}
+				else{
+					List<Connection> conns = this.bindMap.get(name);
+					DefaultEventMessage msg = new DefaultEventMessage();
+					msg.setPath(this.getPath());
+					msg.setName("unsub");
+					Map<String, Object> body = new HashMap<String, Object>();
+					body.put("size", Integer.valueOf(this.size()));
+					msg.setBody(body);
+					log.info("fire event..... " + msg);
+					
+					for(Connection c : conns){
+						c.write(msg);
+					}
+				}
 			}
 		}
+		
+		
 	}
 
 	@Override

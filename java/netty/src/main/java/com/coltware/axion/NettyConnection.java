@@ -50,6 +50,11 @@ public class NettyConnection implements Connection {
 
 	@Override
 	public void write(Object msg) {
-		this.channel.write(msg);
+		if(this.channel.isOpen() && this.channel.isActive()){
+			this.channel.write(msg);
+		}
+		else{
+			this.close();
+		}
 	}
 }

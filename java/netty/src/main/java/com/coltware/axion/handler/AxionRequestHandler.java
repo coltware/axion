@@ -53,8 +53,8 @@ public class AxionRequestHandler extends ChannelInboundMessageHandlerAdapter<Req
 		response.setMessage(HttpResponseStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 		response.setSequence(0);
 		Channel ch = ctx.channel();
-		if(ch.isActive()){
-			ctx.channel().write(response);
+		if(ch.isActive() && ch.isOpen()){
+			ctx.write(response);
 		}
 		//super.exceptionCaught(ctx, cause);
 	}
